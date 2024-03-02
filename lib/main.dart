@@ -14,10 +14,6 @@ void main() {
     debugShowCheckedModeBanner: false,
     home: first(),
   ));
-  // runApp(MaterialApp(
-  //   debugShowCheckedModeBanner: false,
-  //   home: first(),
-  // ));
 }
 
 class first extends StatefulWidget {
@@ -143,16 +139,6 @@ class _firstState extends State<first> {
           ],
         ),
       ),
-      // body: (controller.DataList.length != null)
-      //     ? Obx(() {
-      //         return ListOfAccount();
-      //       })
-      //     : Center(
-      //         child: Icon(Icons.warning_rounded,
-      //             size: 200,
-      //             color: Colors.red,
-      //             semanticLabel: "NO ACCOUNT ADDED"),
-      //       ),
       body: Obx(() {
         return ListOfAccount();
       }),
@@ -178,7 +164,8 @@ class _firstState extends State<first> {
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
-            Get.to(Transaction(index));
+            // Get.to(Transaction(index));
+            Get.to(() => Transaction(index));
           },
           child: Card(
             child: Container(

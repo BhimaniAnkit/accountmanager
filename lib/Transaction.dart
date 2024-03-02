@@ -1,9 +1,14 @@
+import 'dart:io';
 import 'package:accountmanager/Controller/account_controller.dart';
 import 'package:accountmanager/Controller/transaction_controller.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:share/share.dart';
 
 class Transaction extends StatelessWidget {
 
@@ -38,6 +43,9 @@ class Transaction extends StatelessWidget {
           IconButton(onPressed: () {}, icon: Icon(Icons.search)),
           SizedBox(width: 10,),
           IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+          IconButton(onPressed: () {
+            tc.shareTransactionDetailsAsPDF(ac_name);
+          }, icon: Icon(Icons.share)),
         ],
       ),
       body: Column(
@@ -61,6 +69,9 @@ class Transaction extends StatelessWidget {
                     Text("Debit(₹)",
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   ],
+                  // Display Chart
+
+                  // displayTransactionChart(),
                 ),
               ),
               Expanded(child: Obx(() => ListTransaction())),
