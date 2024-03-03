@@ -27,6 +27,81 @@ class Transaction extends StatelessWidget {
       return tc.GetData(ac_name).then((value) => tc.SelectQuery());
     },);
 
+    // List<PieChartSectionData> getSections(){
+    //   // Assuming you have data for credit and debit in tc.amount[ac_name]['credit'] and tc.amount[ac_name]['debit']
+    //   double credit = double.parse(tc.amount[ac_name]['credit' ?? "0"]);
+    //   double debit = double.parse(tc.amount[ac_name]['debit'] ?? "0");
+    //
+    //   return List.generate(2, (index) {
+    //     switch(index){
+    //       case 0:
+    //         return PieChartSectionData(
+    //           color: Colors.green,
+    //           value: credit,
+    //           title: 'Credit',
+    //           radius: 50.0,
+    //           titleStyle: TextStyle(
+    //             fontSize: 14,
+    //             fontWeight: FontWeight.bold,
+    //             color: Color(0xffffffff),
+    //           ),
+    //         );
+    //       case 1:
+    //         return PieChartSectionData(
+    //           color: Colors.red,
+    //           value: debit,
+    //           title: 'Debit',
+    //           radius: 50.0,
+    //           titleStyle: TextStyle(
+    //             fontWeight: FontWeight.bold,
+    //             fontSize: 14,
+    //             color: Color(0xffffffff),
+    //           ),
+    //         );
+    //       default:
+    //         throw Exception('Invalid Index');
+    //     }
+    //   });
+    // }
+
+    Widget displayTransactionChart(){
+      return Padding(
+        padding: EdgeInsets.all(16.0),
+        child: BarChart(
+          BarChartData(
+            alignment: BarChartAlignment.center,
+            groupsSpace: 12.0,
+            titlesData: FlTitlesData(
+              leftTitles: SideTitles(showTitles: true),
+              bottomTitles: SideTitles(showTitles: true),
+            ),
+            borderData: FlBorderData(
+              show: true,
+            ),
+            barGroups: [
+              BarChartGroupData(
+                x: 0,
+                barRods: [
+                  BarChartRodData(
+                    y: tc.amount[ac_name]['credit'],
+                    colors: [Colors.green],
+                  ),
+                  BarChartRodData(
+                    y: tc.amount[ac_name]['debit'],
+                    colors: [Colors.red],
+                  ),
+                  BarChartRodData(
+                    y: tc.amount[ac_name]['balance'],
+                    colors: [Colors.purple],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("${ac.DataList[ac_name]['acname']}"),
@@ -52,7 +127,45 @@ class Transaction extends StatelessWidget {
         children: [
           Expanded(child: Column(
             children: [
+              // Display Chart
               Container(
+                height: 200,
+                // child: displayTransactionChart(),
+                padding: EdgeInsets.all(16.0),
+                child: BarChart(
+                  BarChartData(
+                    barGroups: [
+                      BarChartGroupData(
+                        x: 0,
+                        barRods: [
+                          BarChartRodData(
+                            y: double.parse(tc.amount[ac_name]['credit']),
+                            colors: [Colors.green],
+                          ),
+                          BarChartRodData(
+                            y: double.parse(tc.amount[ac_name]['debit']),
+                            colors: [Colors.red],
+                          ),
+                          BarChartRodData(
+                            y: double.parse(tc.amount[ac_name]['balance'] ?? 0),
+                            colors: [Colors.purple],
+                          ),
+                        ],
+                      ),
+                    ],
+                    titlesData: FlTitlesData(
+                      leftTitles: SideTitles(showTitles: true),
+                      bottomTitles: SideTitles(showTitles: true),
+                    ),
+                    borderData: FlBorderData(
+                      show: true,
+                    ),
+                  ),
+                ),
+              ),
+
+              Container(
+                // height: 200,
                 color: Colors.black12,
                 padding: EdgeInsets.all(10.0),
                 child: Row(
@@ -68,9 +181,9 @@ class Transaction extends StatelessWidget {
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     Text("Debit(₹)",
                         style: TextStyle(fontWeight: FontWeight.bold)),
+                    // displayTransactionChart(),
                   ],
                   // Display Chart
-
                   // displayTransactionChart(),
                 ),
               ),
