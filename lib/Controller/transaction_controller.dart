@@ -39,16 +39,19 @@ class transaction_controller extends GetxController {
 
   Future<void> shareTransactionDetailsAsPDF(int ac_Name) async {
     final account_name = await GetData(ac_Name);
-    print("Account id:= $account_name");
+    // print("Account id:= $account_name");
     // await getDataByAccountName(ac_Name.toString());
 
     if (account_name != null) {
-      print("Account id:= $account_name");
+      // print("Account id:= $account_name");
 
       if (Data.isEmpty || ac_Name < 0 || ac_Name >= Data.length) {
         print('Invalid index or empty list.');
         return;
       }
+
+      // Calculate total values before generating the PDF
+      await TotalAll(ac_Name);
 
       final pdfFile = await generateTransactionPDF(ac_Name, Data.cast<Map<String, dynamic>>(), accountController);
 
@@ -86,8 +89,55 @@ class transaction_controller extends GetxController {
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text('Transaction Details for ${actualAccountName}', style: pw.TextStyle(font: pw.Font.timesBold())),
-                for (var transaction in transactions)
-                  pw.Text('${transaction['date'] + '\t'} - ${transaction['reason'] + '\t'} - ${transaction['amount'] + '\t'} - ${transaction['transaction_type']}'),
+                pw.SizedBox(height: 10),
+                pw.Table(
+                  border: pw.TableBorder.all(),
+                  children: [
+                    pw.TableRow(
+                      children: [
+                        pw.Padding(
+                          padding: pw.EdgeInsets.all(8.0),
+                          child: pw.Text('Date',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        ),
+                        pw.Padding(
+                          padding: pw.EdgeInsets.all(8.0),
+                          child: pw.Text('Transaction Type',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        ),
+                        pw.Padding(
+                          padding: pw.EdgeInsets.all(8.0),
+                          child: pw.Text('Amount',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        ),
+                        pw.Padding(
+                          padding: pw.EdgeInsets.all(8.0),
+                          child: pw.Text('Reason',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                    for (var transaction in transactions)
+                      pw.TableRow(
+                        children: [
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8.0),
+                            child: pw.Text(transaction['date'] ?? '',style: pw.TextStyle()),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8.0),
+                            child: pw.Text(transaction['transaction_type'] ?? '',style: pw.TextStyle()),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8.0),
+                            child: pw.Text(transaction['amount'] ?? '',style: pw.TextStyle()),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8.0),
+                            child: pw.Text(transaction['reason'] ?? '',style: pw.TextStyle()),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                pw.SizedBox(height: 10),
+                generateTotalInfoTable(),
               ],
             );
           },
@@ -105,6 +155,46 @@ class transaction_controller extends GetxController {
       print('Invalid index or empty list.');
       return File(''); // You can handle the case when the PDF file is not generated successfully.
     }
+  }
+
+  pw.Table generateTotalInfoTable(){
+    return pw.Table(
+      border: pw.TableBorder.all(),
+      children: [
+        pw.TableRow(
+          children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.all(8.0),
+              child: pw.Text('Total Debit',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            ),
+            pw.Padding(
+              padding: pw.EdgeInsets.all(8.0),
+              child: pw.Text('Total Credit',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            ),
+            pw.Padding(
+              padding: pw.EdgeInsets.all(8.0),
+              child: pw.Text('Balance',style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            ),
+          ],
+        ),
+        pw.TableRow(
+          children: [
+            pw.Padding(
+              padding: pw.EdgeInsets.all(8.0),
+              child: pw.Text(CreditAmount,style: pw.TextStyle()),
+            ),
+            pw.Padding(
+              padding: pw.EdgeInsets.all(8.0),
+              child: pw.Text(DebitAmount,style: pw.TextStyle()),
+            ),
+            pw.Padding(
+              padding: pw.EdgeInsets.all(8.0),
+              child: pw.Text(Balance,style: pw.TextStyle()),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   Future GetTransactionDatabase() async {

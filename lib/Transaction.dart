@@ -1,14 +1,11 @@
-import 'dart:io';
+
 import 'package:accountmanager/Controller/account_controller.dart';
 import 'package:accountmanager/Controller/transaction_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:share/share.dart';
 
 class Transaction extends StatelessWidget {
 
@@ -63,7 +60,6 @@ class Transaction extends StatelessWidget {
     //     }
     //   });
     // }
-
     Widget displayTransactionChart(){
       return Padding(
         padding: EdgeInsets.all(16.0),
@@ -348,28 +344,25 @@ class Transaction extends StatelessWidget {
                           ))),
                   Spacer(),
                   Expanded(
-                      child: Obx(
-                              () => (tc.Data[index]['transaction_type'] == "Debit")
-                              ? Text(
+                      child: Obx(() =>
+                        (tc.Data[index]['transaction_type'] == "Debit")
+                          ? Text(
                             tc.Data[index]['amount'],
                             style: TextStyle(
-                                fontSize: 15,
-                                color: (tc.Data[index]
-                                ['transaction_type'] == "Credit")
-                                    ? Colors.green
-                                    : Colors.red),
+                              fontSize: 15, color: (tc.Data[index]['transaction_type'] == "Credit")
+                                ? Colors.green
+                                : Colors.red
+                            ),
                             softWrap: true,
                           )
-                              : Text(
-                            "0",
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: (tc.Data[index]
-                                ['transaction_type'] ==
-                                    "Credit")
-                                    ? Colors.green
-                                    : Colors.red),
-                          ))),
+                            : Text(
+                                "0",
+                                style: TextStyle(
+                                fontSize: 15, color: (tc.Data[index]['transaction_type'] == "Credit")
+                                  ? Colors.green
+                                  : Colors.red
+                                ),
+                              ))),
                 ],
               ),
             ),
@@ -390,8 +383,7 @@ class Transaction extends StatelessWidget {
                 width: 300,
                 color: Colors.purple,
                 child: Text(
-                  "Add transaction",
-                  style: TextStyle(fontSize: 25, color: Colors.white),
+                  "Add transaction", style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
               TextField(
@@ -409,30 +401,26 @@ class Transaction extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Obx(
-                                () => Radio(
-                              activeColor: Colors.deepOrange.shade700,
-                              value: "Credit",
-                              groupValue: tc.isTransactionType.value,
-                              onChanged: (value) {
-                                tc.Transaction_Type(value: value);
-                              },
-                            ),
+                          Obx(() => Radio(
+                            activeColor: Colors.deepOrange.shade700,
+                            value: "Credit",
+                            groupValue: tc.isTransactionType.value,
+                            onChanged: (value) {
+                              tc.Transaction_Type(value: value);
+                            },),
                           ),
                           Text("Credit(+)"),
                         ],
                       ),
                       Row(
                         children: [
-                          Obx(
-                                () => Radio(
-                              value: "Debit",
-                              activeColor: Colors.deepOrange.shade700,
-                              groupValue: tc.isTransactionType.value,
-                              onChanged: (value) {
-                                tc.Transaction_Type(value: value);
-                              },
-                            ),
+                          Obx(() => Radio(
+                            value: "Debit",
+                            activeColor: Colors.deepOrange.shade700,
+                            groupValue: tc.isTransactionType.value,
+                            onChanged: (value) {
+                              tc.Transaction_Type(value: value);
+                            },),
                           ),
                           Text("Debit(-)"),
                         ],
@@ -443,7 +431,6 @@ class Transaction extends StatelessWidget {
               ),
               TextField(
                 keyboardType: TextInputType.number,
-                
                 decoration: InputDecoration(labelText: "Amount",isDense: true,),
                 controller: amount_controller,
                 style: TextStyle(color: HexColor("990099"),),
@@ -477,16 +464,14 @@ class Transaction extends StatelessWidget {
           // ElevatedButton(
           FilledButton(
               onPressed: () {
-                if (tc.date_controller != "" &&
-                    tc.isTransactionType.value != "" &&
-                    amount_controller.text != "") {
+                if (tc.date_controller != "" && tc.isTransactionType.value != "" && amount_controller.text != "") {
                   tc.InsertData(
                       index: ac_name,
                       date: tc.date_controller.text,
                       type: tc.isTransactionType,
                       amount: amount_controller.text,
                       reason: (reason_controller.text != "") ? reason_controller.text : "No Reason",
-                      );
+                  );
                   tc.GetData(ac_name)
                       .then((value) => tc.TotalAll(tc.amount[ac_name]['id']))
                       .then((value) => tc.SelectQuery());
@@ -495,13 +480,14 @@ class Transaction extends StatelessWidget {
                   amount_controller.clear();
                   reason_controller.clear();
                   Get.back();
-                } else {
+                }
+                else {
                   Get.snackbar("Error", "Fill all required field",
-                      colorText: Colors.white,
-                      backgroundColor: Colors.purple,
-                      snackPosition: SnackPosition.BOTTOM,
-                      duration: Duration(milliseconds: 1000),
-                      margin: EdgeInsets.all(50));
+                  colorText: Colors.white,
+                  backgroundColor: Colors.purple,
+                  snackPosition: SnackPosition.BOTTOM,
+                  duration: Duration(milliseconds: 1000),
+                  margin: EdgeInsets.all(50));
                 }
               },
               style: ButtonStyle(
@@ -511,8 +497,7 @@ class Transaction extends StatelessWidget {
                 // shape: MaterialStatePropertyAll(BoxShape.circle),
               ),
               child: Text(
-                "ADD",
-                style: TextStyle(color: Colors.white),
+                "ADD", style: TextStyle(color: Colors.white),
               ))
         ],
       );
@@ -549,31 +534,25 @@ class Transaction extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Obx(
-                                () =>
-                                Radio(
-                                  activeColor: Colors.purple,
-                                  value: "Credit",
-                                  groupValue: tc.isTransactionType.value,
-                                  onChanged: (value) {
-                                    tc.Transaction_Type(value: value);
-                                  },
-                                ),
+                          Obx(() => Radio(
+                            activeColor: Colors.purple,
+                            value: "Credit",
+                            groupValue: tc.isTransactionType.value,
+                            onChanged: (value) {
+                              tc.Transaction_Type(value: value);
+                            },),
                           ),
                           Text("Credit(+)"),
                         ],
                       ),
                       Row(
                         children: [
-                          Obx(
-                                () =>
-                                Radio(
-                                  value: "Debit",
-                                  groupValue: tc.isTransactionType.value,
-                                  onChanged: (value) {
-                                    tc.Transaction_Type(value: value);
-                                  },
-                                ),
+                          Obx(() => Radio(
+                            value: "Debit",
+                            groupValue: tc.isTransactionType.value,
+                            onChanged: (value) {
+                              tc.Transaction_Type(value: value);
+                            },),
                           ),
                           Text("Debit(-)"),
                         ],
@@ -610,9 +589,7 @@ class Transaction extends StatelessWidget {
               child: Text("CANCEL")),
           ElevatedButton(
               onPressed: () {
-                if (tc.date_controller != "" &&
-                    tc.isTransactionType.value != "" &&
-                    amount_controller.text != "") {
+                if (tc.date_controller != "" && tc.isTransactionType.value != "" && amount_controller.text != "") {
                   tc.Edit_Data(
                     index: tc.Data[index]['id'],
                     date: tc.date_controller.text,

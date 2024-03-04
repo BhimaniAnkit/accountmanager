@@ -164,7 +164,6 @@ class _firstState extends State<first> {
       itemBuilder: (context, index) {
         return InkWell(
           onTap: () {
-            // Get.to(Transaction(index));
             Get.to(() => Transaction(index));
           },
           child: Card(
@@ -178,8 +177,7 @@ class _firstState extends State<first> {
                     children: [
                       Text(
                         "${controller.DataList[index]['acname']}",
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
                       IconButton(
@@ -207,14 +205,12 @@ class _firstState extends State<first> {
                           )),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  SizedBox(height: 10,),
                   Expanded(
                       child: Row(
                     children: [
                       Expanded(
-                          child: Padding(
+                        child: Padding(
                         padding: EdgeInsets.only(right: 10.0),
                         child: Container(
                           decoration: BoxDecoration(
@@ -225,23 +221,17 @@ class _firstState extends State<first> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                "Credit(↑)",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
+                              Text("Credit(↑)", style: TextStyle(fontSize: 18),),
+                              SizedBox(height: 10,),
                               Obx(() => Text(
-                                    "₹ ${tc.amount[index]['credit']}",
-                                    style: TextStyle(fontSize: 15),
-                                  )),
+                                "₹ ${tc.amount[index]['credit']}", style: TextStyle(fontSize: 15),
+                              )),
                             ],
                           ),
                         ),
                       )),
                       Expanded(
-                          child: Padding(
+                        child: Padding(
                         padding: EdgeInsets.only(right: 10.0),
                         child: Container(
                           decoration: BoxDecoration(
@@ -252,17 +242,9 @@ class _firstState extends State<first> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                "Debit(↓)",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Obx(() => Text(
-                                    "₹ ${tc.amount[index]['debit']}",
-                                    style: TextStyle(fontSize: 15),
-                                  )),
+                              Text("Debit(↓)", style: TextStyle(fontSize: 18),),
+                              SizedBox(height: 10,),
+                              Obx(() => Text("₹ ${tc.amount[index]['debit']}", style: TextStyle(fontSize: 15),)),
                             ],
                           ),
                         ),
@@ -279,18 +261,11 @@ class _firstState extends State<first> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              "Balance",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
+                            Text("Balance", style: TextStyle(fontSize: 18, color: Colors.white),),
+                            SizedBox(height: 10,),
                             Obx(() => Text(
                                   "₹ ${tc.amount[index]['balance']}",
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.white),
+                                  style: TextStyle(fontSize: 15, color: Colors.white),
                                 )),
                           ],
                         ),
@@ -313,10 +288,10 @@ class _firstState extends State<first> {
       titleStyle: TextStyle(fontSize: 0),
       onConfirm: () {
         controller.DataInsert(name: accountNameController.text).then((value) =>
-            controller.GetData()
-                .then((value) => tc.GetTotaldb())
-                .then((value) => tc.InsertAmountData())
-                .then((value) => tc.SelectQuery()));
+          controller.GetData()
+            .then((value) => tc.GetTotaldb())
+            .then((value) => tc.InsertAmountData())
+            .then((value) => tc.SelectQuery()));
         accountNameController.clear();
         Get.back();
       },
@@ -332,14 +307,9 @@ class _firstState extends State<first> {
             height: 50,
             width: 300,
             color: Colors.purple,
-            child: Text(
-              "Add new account",
-              style: TextStyle(fontSize: 25, color: Colors.white),
-            ),
+            child: Text("Add new account", style: TextStyle(fontSize: 25, color: Colors.white),),
           ),
-          SizedBox(
-            height: 20,
-          ),
+          SizedBox(height: 20,),
           SizedBox(
             width: 280,
             child: TextField(
@@ -378,12 +348,9 @@ class _firstState extends State<first> {
               height: 50,
               width: 300,
               color: Colors.purple,
-              child: Text("Update account",
-                  style: TextStyle(fontSize: 25, color: Colors.white)),
+              child: Text("Update account", style: TextStyle(fontSize: 25, color: Colors.white)),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20,),
             SizedBox(
               width: 280,
               child: TextField(
