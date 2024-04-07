@@ -23,6 +23,7 @@ class account_controller extends GetxController{
       });
     }
   }
+
   Future GetData() async {
     String SelectQuery = """SELECT * FROM $dbTable""";
     DataList.value = await account_database!.rawQuery(SelectQuery);

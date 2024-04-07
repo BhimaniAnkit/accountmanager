@@ -1,13 +1,14 @@
 import 'package:accountmanager/Controller/account_controller.dart';
 import 'package:accountmanager/Controller/transaction_controller.dart';
 import 'package:accountmanager/Transaction.dart';
-import 'package:accountmanager/advance_drawer.dart';
+import 'package:accountmanager/lock_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+// import 'package:sqflite/sqflite.dart';
 
 void main() {
   runApp(GetMaterialApp(
@@ -17,7 +18,7 @@ void main() {
 }
 
 class first extends StatefulWidget {
-  const first({Key? key}) : super(key: key);
+  // static Database? database;
 
   @override
   State<first> createState() => _firstState();
@@ -27,6 +28,32 @@ class _firstState extends State<first> {
   TextEditingController accountNameController = TextEditingController();
   transaction_controller tc = Get.put(transaction_controller());
   var controller = Get.put(account_controller());
+
+  List str = ["save as pdf","save as cancel"];
+  List icon_name = ["Home","Backup","Restore","Change currency","Change Password","change security question",
+    "Setting","Share the App","Rate the app","Privacy Policy","More App","Ads Free"];
+  List icon = [Icons.home_filled,Icons.backup,Icons.restore,Icons.currency_exchange,Icons.password_outlined,
+    Icons.security,Icons.settings,Icons.share,Icons.star,Icons.policy,Icons.apps,Icons.block];
+
+  double totalCredit = 0.0;
+  double totalDebit = 0.0;
+  double totalBalance = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    get();
+  }
+
+  get() async {
+    Map<String, double> totals = await tc.TotalAll(0); // Assuming index 0 for total
+    setState(() {
+      // Update the total values in the drawer display
+      totalCredit = totals['credit']!;
+      totalDebit = totals['debit']!;
+      totalBalance = totals['balance']!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,97 +75,197 @@ class _firstState extends State<first> {
           }, icon: Icon(Icons.more_vert)),
         ],
       ),
+
       drawer: Drawer(
-        backgroundColor: Colors.white,
-        elevation: 8.0,
-        shadowColor: Colors.deepOrange,
-        width: 280,
-        // shape: ShapeBorder(),
-        surfaceTintColor: Colors.amber.shade400,
-        child: ListView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DrawerHeader(
+            Expanded(flex: 4,child: Container(
+              height: double.infinity,
+              width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
-                image: DecorationImage(
-                  image: AssetImage("pic/sidemenu_bg.png"),
-                  fit: BoxFit.fill,
-                ),
+                  image: DecorationImage(fit: BoxFit.fill,image: AssetImage("pic/sidemenu_bg.png"))
               ),
-              child: UserAccountsDrawerHeader(
-                // currentAccountPictureSize: Size(50, 50),
-                decoration: BoxDecoration(
-                    // color: Colors.grey,
+              child: Column(
+                children: [
+                  SizedBox(height: 30,),
+                  Center(
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(fit: BoxFit.fill,image: AssetImage("pic/ic_launcher_round.png"))
+                      ),
                     ),
-                currentAccountPicture: Icon(
-                  Ionicons.bookmarks_sharp,
-                  grade: 15.0,
-                  color: Colors.white,
-                ),
-                // currentAccountPicture: Image.asset("pic/ic_notification.png",alignment: Alignment.center,fit: BoxFit.fill,),
-                // currentAccountPictureSize: Size(70, 70),
-                accountName: Text(
-                  "Account Manager",
-                  textAlign: TextAlign.center,
-                ),
-                accountEmail: Text(""),
+                  ),
+                  SizedBox(height: 10,),
+                  Center(child: Text("Account Manager",style: TextStyle(fontFamily: "one",fontSize: 20,color: Colors.white)),),
+                  Divider(color: Colors.white,thickness: 1,),
+                  Container(
+                    height: 90,
+                    width: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.purple.shade700,
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 5.0)),
+                            Expanded(child: Text("Credit(+)",textAlign: TextAlign.center,)),
+                            Expanded(child: Text("₹ ${totalCredit.toStringAsFixed(2)}",textAlign: TextAlign.center,)),
+                            // Expanded(child: Text("₹ ${tc.getTotalCredit().toStringAsFixed(2)}",textAlign: TextAlign.center,)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(padding: EdgeInsets.only(top: 5.0)),
+                            Expanded(child: Text("Debit(-)",textAlign: TextAlign.center,)),
+                            Expanded(child: Text("₹${totalDebit.toStringAsFixed(2)}",textAlign: TextAlign.center,)),
+                          ],
+                        ),
+                        Divider(color: Colors.white,thickness: 1,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(child: Text("Balance",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),)),
+                            Expanded(child: Text("₹ ${totalBalance.toStringAsFixed(2)}",textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ),
-            ListTile(
-              title: Text("Home"),
-              leading: Icon(
-                Icons.home,
-              ),
-            ),
-            ListTile(
-              title: Text("Backup"),
-              leading: Icon(Icons.backup_sharp),
-            ),
-            ListTile(
-              title: Text("Restore"),
-              leading: Icon(Icons.restore_sharp),
-            ),
-            ListTile(
-              title: Text("Change Currency"),
-              leading: Icon(Icons.settings),
-            ),
-            ListTile(
-              title: Text("Change Password"),
-              leading: Icon(Icons.settings),
-            ),
-            ListTile(
-              title: Text("Change Security question"),
-              // leading: Icon(Icons.send_to_mobile_sharp),
-              leading: Icon(Icons.app_settings_alt_outlined),
-            ),
-            ListTile(
-              title: Text("Settings"),
-              leading: Icon(Icons.settings),
-            ),
-            ListTile(
-              title: Text("Share the app"),
-              leading: Icon(Icons.share_sharp),
-            ),
-            ListTile(
-              title: Text("Rate the app"),
-              leading: Icon(Icons.star_rate_sharp),
-            ),
-            ListTile(
-              title: Text("Privacy policy"),
-              // leading: Icon(Icons.privacy_tip_sharp),
-              leading: Icon(Icons.policy_sharp),
-            ),
-            ListTile(
-              title: Text("More apps"),
-              leading: Icon(Icons.apps),
-            ),
-            ListTile(
-              title: Text("Ads Free"),
-              leading: Icon(Icons.block),
-            ),
+            )),
+            Expanded(flex: 8,child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: ListView.builder(
+                itemCount: icon_name.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onTap: () {
+                      print(index);
+                      Navigator.pop(context);
+                      setState(() {});
+                    },
+                    title: Text('${icon_name[index]}',style: TextStyle(color: Colors.black),),
+                    leading: InkWell(
+                      onTap: () {
+                        print("${icon[index]}");
+                        Navigator.pop(context);
+                        setState(() {});
+                      },
+                      child: Icon(icon[index],color: Colors.black,),
+                    ),
+                  );
+              },),
+            )),
           ],
         ),
       ),
+
+      // drawer: Drawer(
+      //   backgroundColor: Colors.white,
+      //   elevation: 8.0,
+      //   shadowColor: Colors.deepOrange,
+      //   width: 280,
+      //   // shape: ShapeBorder(),
+      //   surfaceTintColor: Colors.amber.shade400,
+      //   child: ListView(
+      //     children: [
+      //       DrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: Colors.white,
+      //           image: DecorationImage(
+      //             image: AssetImage("pic/sidemenu_bg.png"),
+      //             fit: BoxFit.fill,
+      //           ),
+      //         ),
+      //         child: UserAccountsDrawerHeader(
+      //           // currentAccountPictureSize: Size(50, 50),
+      //           decoration: BoxDecoration(
+      //               // color: Colors.grey,
+      //               ),
+      //           currentAccountPicture: Icon(
+      //             Ionicons.bookmarks_sharp,
+      //             grade: 15.0,
+      //             color: Colors.white,
+      //           ),
+      //           // currentAccountPicture: Image.asset("pic/ic_notification.png",alignment: Alignment.center,fit: BoxFit.fill,),
+      //           // currentAccountPictureSize: Size(70, 70),
+      //           accountName: Text(
+      //             "Account Manager",
+      //             textAlign: TextAlign.center,
+      //           ),
+      //           accountEmail: Text(""),
+      //         ),
+      //       ),
+      //       ListTile(
+      //         title: Text("Home"),
+      //         leading: Icon(
+      //           Icons.home,
+      //         ),
+      //       ),
+      //       ListTile(
+      //         title: Text("Backup"),
+      //         leading: Icon(Icons.backup_sharp),
+      //       ),
+      //       ListTile(
+      //         title: Text("Restore"),
+      //         leading: Icon(Icons.restore_sharp),
+      //       ),
+      //       ListTile(
+      //         title: Text("Change Currency"),
+      //         leading: Icon(Icons.settings),
+      //         onTap: () {
+      //           // handleChangeCurrency();
+      //         },
+      //       ),
+      //       ListTile(
+      //         title: Text("Change Password"),
+      //         leading: Icon(Icons.settings),
+      //       ),
+      //       ListTile(
+      //         title: Text("Change Security question"),
+      //         // leading: Icon(Icons.send_to_mobile_sharp),
+      //         leading: Icon(Icons.app_settings_alt_outlined),
+      //       ),
+      //       ListTile(
+      //         title: Text("Settings"),
+      //         leading: Icon(Icons.settings),
+      //       ),
+      //       ListTile(
+      //         title: Text("Share the app"),
+      //         leading: Icon(Icons.share_sharp),
+      //       ),
+      //       ListTile(
+      //         title: Text("Rate the app"),
+      //         leading: Icon(Icons.star_rate_sharp),
+      //       ),
+      //       ListTile(
+      //         title: Text("Privacy policy"),
+      //         // leading: Icon(Icons.privacy_tip_sharp),
+      //         leading: Icon(Icons.policy_sharp),
+      //       ),
+      //       ListTile(
+      //         title: Text("More apps"),
+      //         leading: Icon(Icons.apps),
+      //       ),
+      //       ListTile(
+      //         title: Text("Ads Free"),
+      //         leading: Icon(Icons.block),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: Obx(() {
         return ListOfAccount();
       }),

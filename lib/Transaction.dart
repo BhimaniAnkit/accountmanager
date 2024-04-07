@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class Transaction extends StatelessWidget {
-
   int ac_name;
   Transaction(this.ac_name);
 
@@ -24,42 +23,6 @@ class Transaction extends StatelessWidget {
       return tc.GetData(ac_name).then((value) => tc.SelectQuery());
     },);
 
-    // List<PieChartSectionData> getSections(){
-    //   // Assuming you have data for credit and debit in tc.amount[ac_name]['credit'] and tc.amount[ac_name]['debit']
-    //   double credit = double.parse(tc.amount[ac_name]['credit' ?? "0"]);
-    //   double debit = double.parse(tc.amount[ac_name]['debit'] ?? "0");
-    //
-    //   return List.generate(2, (index) {
-    //     switch(index){
-    //       case 0:
-    //         return PieChartSectionData(
-    //           color: Colors.green,
-    //           value: credit,
-    //           title: 'Credit',
-    //           radius: 50.0,
-    //           titleStyle: TextStyle(
-    //             fontSize: 14,
-    //             fontWeight: FontWeight.bold,
-    //             color: Color(0xffffffff),
-    //           ),
-    //         );
-    //       case 1:
-    //         return PieChartSectionData(
-    //           color: Colors.red,
-    //           value: debit,
-    //           title: 'Debit',
-    //           radius: 50.0,
-    //           titleStyle: TextStyle(
-    //             fontWeight: FontWeight.bold,
-    //             fontSize: 14,
-    //             color: Color(0xffffffff),
-    //           ),
-    //         );
-    //       default:
-    //         throw Exception('Invalid Index');
-    //     }
-    //   });
-    // }
     Widget displayTransactionChart(){
       return Padding(
         padding: EdgeInsets.all(16.0),

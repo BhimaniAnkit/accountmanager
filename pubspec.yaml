@@ -39,6 +39,11 @@ dependencies:
   ionicons: ^0.2.2
   flutter_advanced_drawer: ^1.3.5
   lucide_icons: ^0.257.0
+  shared_preferences:
+  flutter_lock_screen:
+  flutter_screen_lock:
+  passcode_screen:
+  currency_picker:
   get:
   sqflite:
   path:

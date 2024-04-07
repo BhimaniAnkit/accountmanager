@@ -214,6 +214,22 @@ class transaction_controller extends GetxController {
     }
   }
 
+  double getTotalCredit(){
+    double totalCredit = 0.0;
+    for(int i = 0; i < amount.length; i++){
+      totalCredit += amount[i]['credit'];
+    }
+    return totalCredit;
+  }
+
+  double getTotalDebit(){
+    double totalDebit = 0.0;
+    for(int i = 0; i < amount.length; i++){
+      totalDebit += amount[i]['debit'];
+    }
+    return totalDebit;
+  }
+
   InsertData({required var date,required var type,required var amount,required var reason,required int index}){
     String InsertQuery = """INSERT INTO $dbTableName VALUES(NULL,'$date','$type','$amount','$reason',$index)""";
     transaction_database!.rawInsert(InsertQuery);
@@ -282,14 +298,13 @@ class transaction_controller extends GetxController {
     }
   }
 
-  Future TotalAll(int id) async{
+  Future<Map<String, double>> TotalAll(int id) async {
     double credit = 0;
     double debit = 0;
     for(int i = 0; i < Data.length; i++){
       if(Data[i]['transaction_type'] == "Credit"){
         credit = double.parse(Data[i]['amount']) + credit;
-      }
-      else{
+      } else {
         debit = double.parse(Data[i]['amount']) + debit;
       }
     }
@@ -299,8 +314,30 @@ class transaction_controller extends GetxController {
     Balance = total.toStringAsFixed(2);
 
     String UpdateQuery = """UPDATE $dbTableName1 SET credit = '$CreditAmount',debit = '$DebitAmount',balance = '$Balance' WHERE id = $id;""";
-    _database!.rawUpdate(UpdateQuery);
+    await _database!.rawUpdate(UpdateQuery);
+
+    return {'credit': credit, 'debit': debit, 'balance': total};
   }
+
+  // Future TotalAll(int id) async{
+  //   double credit = 0;
+  //   double debit = 0;
+  //   for(int i = 0; i < Data.length; i++){
+  //     if(Data[i]['transaction_type'] == "Credit"){
+  //       credit = double.parse(Data[i]['amount']) + credit;
+  //     }
+  //     else{
+  //       debit = double.parse(Data[i]['amount']) + debit;
+  //     }
+  //   }
+  //   CreditAmount = credit.toStringAsFixed(2);
+  //   DebitAmount = debit.toStringAsFixed(2);
+  //   double total = credit - debit;
+  //   Balance = total.toStringAsFixed(2);
+  //
+  //   String UpdateQuery = """UPDATE $dbTableName1 SET credit = '$CreditAmount',debit = '$DebitAmount',balance = '$Balance' WHERE id = $id;""";
+  //   _database!.rawUpdate(UpdateQuery);
+  // }
 
   Future SelectQuery() async {
     String showAmount = """SELECT * FROM $dbTableName1""";
